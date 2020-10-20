@@ -1,0 +1,11 @@
+**/.ipynb_checkpoints
+
+**/__pycache__
+
+DogVGG16Data.npz
+
+DogXceptionData.npz
+
+**/dogImages
+
+**/lfw
