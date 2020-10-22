@@ -78,13 +78,15 @@ Once the above files have been downloaded, and the above libraries installed, op
 
 In this section I discuss the results of building a CNN from scratch, building a CNN through transfer learning, the final algorithm, as well as the points of improvement.
 
+In testing these models, accuracy is used to gauge performance. This metric has been chosen for its simplicity, and the fact that it works in situations such as this where there isn't huge differences between the number of observations in each class.
+
 ## CNN from scratch
 There were a number of limitations and challenges that worked against this approach:
 * Relatively small dataset (~8000 images).
 * Large number of classes, with some classes having very minor differences (133).
 * Development happening on CPU enforcing a practical limit on the size of the CNN, and the number of epochs that can be run.
 
-Considering the above limitations, the final architecture's test accuracy of 12.3% (compared to the <1% accuracy of random guessing) is a rather good result.
+Considering the above limitations, the final architecture's test accuracy of 11.8% (compared to the <1% accuracy of random guessing) is a rather good result.
 
 This was achieved through following some general guidelines on how to build CNNs for image recognition. Primarily, through successive convolutional layers gradually increasing the number of nodes, with MaxPooling layers interspered to reduce output size; and the use of ReLu activation functions throughout.
 
@@ -93,7 +95,7 @@ Small gains on the accuracy were achieved through testing various parameters, wi
 However, large gains were achieved through the use of Image augmentation, which effectively makes up for the relatively small dataset. Images were augmented by shifting horizontally and vertically, flipping horizontally, and tilting the image up to 30 degrees. Flipping vertically and tilting the image by higher degrees was avoided, as this did not make sense for images of dogs.
 
 ## Transfer learning
-As expected, taking an existing CNN trained on ImageNet and using transfer learning yielded much better results, with the final model achieving a test accuracy of 86.0%. The model that was chosen was Xception, largely arbitrarily. It is likely that other models could have yielded similar results.
+As expected, taking an existing CNN trained on ImageNet and using transfer learning yielded much better results, with the final model achieving a test accuracy of 84.0%. The model that was chosen was Xception, largely arbitrarily. It is likely that other models could have yielded similar results.
 
 As with the CNN built from scratch, image augmentation was used to increase performance of the model. However, considering the strong performance of this model to begin with, the performance boost from this technique was not as drastic as it was in the prior case.
 
@@ -103,16 +105,16 @@ The final algorithm is based on three models:
 * ResNet-50 model to detect dogs.
 * Xception model to predict dog breed.
 
-In practice, the Xception model feels like it is performing the strongest. This is because even when the model gets a dog breed wrong, it tends to predict a dog breed that strongly resembles the actual breed. And, in the case of human images, it is incredibly hard to judge what is or is not a good prediction, so the expectations of the model are rather low.
+In practice, the Xception model *feels* like it is performing the strongest, despite scoring the lowest accuracy. This is because even when the model gets a dog breed wrong, it tends to predict a dog breed that strongly resembles the actual breed. And, in the case of human images, it is incredibly hard to judge what is or is not a good prediction, so the expectations of the model are rather low.
 
-On the other hand, the face detector implementation feels like the weakest link. However, this has less to do with the objective accuracy of the model (which in testing was rather high), but rather the high expectations put on the model. While the Xception model has the benefit of being able to predict similar dog breeds even when it gets it wrong, and the fact that any dog breed can be seen as a "good" prediction for a human image, it is very obvious to a user when the face detector gets its output wrong. It can only output a binary yes/no, and if the model gets its prediction wrong, it is very clear to the user that it has done so.
+On the other hand, the face detector implementation feels like the weakest link. However, this has less to do with the objective accuracy of the model (which in testing was rather high at 93.1%), but rather the high expectations put on the model. While the Xception model has the benefit of being able to predict similar dog breeds even when it gets it wrong, and the fact that any dog breed can be seen as a "good" prediction for a human image, it is very obvious to a user when the face detector gets its output wrong. It can only output a binary yes/no, and if the model gets its prediction wrong, it is very clear to the user that it has done so.
 
 ## Improvements
 
 Based on the discussion above, improvements should focus on the face detector model. It would first be important to more thoroughly test the current accuracy of the model, and it would be interesting to see whether alternative ready models would provide better performance (for instance, could the ResNet-50 model used for detecting dogs be used to detect humans?).
 
 If the performance of the Xception model needed to be improved, this could be done in a few ways:
-* Increase the size of the training dataset.
+* Increase the size of the training dataset, especially for the dog breeds that scored the lowest accuracy.
 * Increase the data quality of the training dataset (some dogs are mis-classified).
 * By developing on GPU, larger Dense layers could be experimented with, and the number of epochs run could also be increased.
 
