@@ -80,6 +80,8 @@ In this section I discuss the results of building a CNN from scratch, building a
 
 In testing these models, accuracy is used to gauge performance. This metric has been chosen for its simplicity, and the fact that it works in situations such as this where there isn't huge differences between the number of observations in each class.
 
+An alternative metric that could be used instead would be the f1-score, which would be more robust when there are differences in the number of observations in each class. However, the accuracy was preferred in this case because it more closely matches the experience of user using these models in practice. That is, a user is most concerned with whether the model got the specific picture right or wrong.
+
 ## CNN from scratch
 There were a number of limitations and challenges that worked against this approach:
 * Relatively small dataset (~8000 images).
